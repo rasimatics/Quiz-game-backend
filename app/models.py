@@ -2,12 +2,15 @@ from app import db
 from werkzeug.security import check_password_hash
 import datetime
 
+
+
 class Users(db.Document):
     username = db.StringField(required=True,unique=True)
     password = db.StringField(required=True)
     email = db.EmailField(required=True,unique=True)
     point = db.IntField(default=0)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
+
 
 
     def check_password(self,password):
@@ -27,4 +30,5 @@ class Users(db.Document):
 
     def get_id(self):
         return self.username
+
 
