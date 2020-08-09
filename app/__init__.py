@@ -2,6 +2,7 @@ from flask import Flask
 from flask_mongoengine import MongoEngine
 from flask_login import LoginManager
 from flask_restful import Api
+from flask_cors import CORS
 
 
 
@@ -10,6 +11,7 @@ from flask_restful import Api
 db = MongoEngine()
 loginmanager = LoginManager()
 api = Api()
+cors = CORS()
 
 loginmanager.login_message = 'Hello world'
 
@@ -26,6 +28,7 @@ def create_app():
 	db.init_app(app)
 	loginmanager.init_app(app)
 	api.init_app(app)
+	cors.init_app(app, resources={"*": {"origins":"*"}})
 
 
 	# register blueprints

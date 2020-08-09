@@ -1,26 +1,34 @@
-from flask import Blueprint, request, jsonify
-from app.models import User
-from werkzeug.security import generate_password_hash
-from flask_login import login_required, login_user, logout_user
+from flask import  request, jsonify,make_response
+from flask_login import  login_user, logout_user
 from app import api
 from flask_restful import Resource
 from .utils import *
 from .schema import *
 
 
-
-
 class Register(Resource):
     def post(self):
-        schema = Userschema()
+        
+        # json validation
+        schema = UserRegister()
         data = request.get_json(force=True)
         errors = schema.validate(data)
         if errors:
             return errors, 422
         data = schema.dump(data)
+
+        # check uniqueness
+        if User.objects(username=data['username']).first():
+            make_response(jsonify({"Username":"This username is taken"}),400)
+
+        if User.objects(email=data['email']).first():
+            return make_response(jsonify({"Email":"This email is taken"}),400)
+
+        # save user in db
         user = User(username=data['username'],password=data['password'],email=data['email'])
         user.save()
-        return data
+
+        return make_response(jsonify(user),201)
 
 api.add_resource(Register, '/user/register/')
 
@@ -28,16 +36,22 @@ api.add_resource(Register, '/user/register/')
 
 class Login(Resource):
     def post(self):
-        data = request.json
+        schema = UserLogin()
+        data = request.get_json(force=True)
+        errors = schema.validate(data)
+        if errors:
+            return errors, 422
+        data = schema.dump(data)
         username = data['username']
         password = data['password']
+
         user = get_user(username)
 
         if user and user.check_password(password):
             login_user(user)
-            return {"Info": "User signed in!"}
+            return make_response(jsonify({"Info": "User signed in!"}),200)
         else:
-            return {"Error": "User cridentials are not correct"}, 404
+            return make_response(jsonify({"Error": "User cridentials are not correct"}), 400)
 
 api.add_resource(Login, '/user/login/')
 
@@ -45,7 +59,7 @@ api.add_resource(Login, '/user/login/')
 class Logout(Resource):
     def get(self):
         logout_user()
-        return {"Info": "User loged out!"}
+        return make_response(jsonify({"Info": "User loged out!"}),200)
 
 api.add_resource(Logout, '/user/logout/')
 

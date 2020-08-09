@@ -5,9 +5,9 @@ import datetime
 
 
 class User(db.Document):
-    username = db.StringField(unique=True)
+    username = db.StringField()
     password = db.StringField()
-    email = db.EmailField(unique=True)
+    email = db.EmailField()
     point = db.IntField(default=0)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
