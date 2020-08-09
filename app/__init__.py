@@ -17,6 +17,7 @@ loginmanager.login_message = 'Hello world'
 
 
 from .users import routes
+from .game import  routes
 
 def create_app():
 	app = Flask(__name__)

@@ -34,4 +34,11 @@ class User(db.Document):
     def get_id(self):
         return self.username
 
+class Player(db.EmbeddedDocument):
+    title = db.StringField(default="Rasim")
+    age = db.IntField(default=15)
 
+
+class GameRoom(db.Document):
+    members = db.ListField(db.EmbeddedDocumentField(Player),default=list)
+    created_at = db.DateTimeField(default=datetime.datetime.utcnow)
