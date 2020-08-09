@@ -18,10 +18,15 @@ class Register(Resource):
         data = schema.dump(data)
 
         # check uniqueness
-        if User.objects(username=data['username']).first():
-            make_response(jsonify({"Username":"This username is taken"}),400)
+        check_username = User.objects(username=data['username']).first()
+        check_email= User.objects(email=data['email']).first()
 
-        if User.objects(email=data['email']).first():
+        if check_username and check_username:
+            return make_response(jsonify({"Error":"Username and email were taken"}),400)
+        if check_username:
+            return make_response(jsonify({"Username":"This username is taken"}),400)
+
+        if check_email:
             return make_response(jsonify({"Email":"This email is taken"}),400)
 
         # save user in db
