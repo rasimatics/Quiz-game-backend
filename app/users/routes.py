@@ -1,24 +1,26 @@
 from flask import Blueprint, request, jsonify
-from app.models import Users
+from app.models import User
 from werkzeug.security import generate_password_hash
 from flask_login import login_required, login_user, logout_user
 from app import api
 from flask_restful import Resource
 from .utils import *
+from .schema import *
+
 
 
 
 class Register(Resource):
     def post(self):
-        data = request.json
-        user = get_user(data['username'])
-        if user:
-            return {"Error": 'This username is taken'}, 404
-
-        user = Users(username=data['username'], email=data['email'],
-                    password=generate_password_hash(data['password']))
+        schema = Userschema()
+        data = request.get_json(force=True)
+        errors = schema.validate(data)
+        if errors:
+            return errors, 422
+        data = schema.dump(data)
+        user = User(username=data['username'],password=data['password'],email=data['email'])
         user.save()
-        return jsonify(user)
+        return data
 
 api.add_resource(Register, '/user/register/')
 

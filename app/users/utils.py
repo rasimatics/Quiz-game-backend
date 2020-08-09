@@ -1,8 +1,9 @@
-from app.models import Users
+from app.models import User
 from app import loginmanager
 
+
 def get_user(username):
-    user = Users.objects(username=username).first()
+    user = User.objects(username=username).first()
     return user if user is not None else None
 
 
