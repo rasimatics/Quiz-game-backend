@@ -36,7 +36,7 @@ class User(db.Document):
         return self.username
 
 class Player(db.EmbeddedDocument):
-    pass
+    name = db.StringField()
 
 
 class GameRoom(db.Document):
@@ -45,8 +45,6 @@ class GameRoom(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 
-class Game(db.Document):
-    pass
 
 
 class Word(db.Document):
