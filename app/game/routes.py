@@ -16,18 +16,18 @@ class CreateOrJoin(Resource):
             gameroom.waiting = False
             gameroom.members.append(player)
             gameroom.save()
-            # socket join_room()
             # start game
+            # return success response
 
         # create a new room
         else:
             gameroom = GameRoom()
             gameroom.members.append(player)
             gameroom.save()
-            # socket join_room()
             # wait
             # if not user connect bot
             # start game
+            # return success response
 
         return jsonify(gameroom)
 
