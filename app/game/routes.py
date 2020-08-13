@@ -31,5 +31,7 @@ class CreateOrJoin(Resource):
 
         return jsonify(gameroom)
 
+
+
 api.add_resource(CreateOrJoin, '/start-game/')
 
