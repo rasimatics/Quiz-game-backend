@@ -45,8 +45,6 @@ class GameRoom(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 
-
-
 class Word(db.Document):
     word = db.StringField(max_length=7)
     usage = db.IntField(default=0)
