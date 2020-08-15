@@ -39,11 +39,15 @@ class User(db.Document):
 
 class Player(db.EmbeddedDocument):
     name = db.StringField()
+    word = db.StringField(default="")
+    found_letters = db.ListField(db.StringField(),default=list)
 
+    
 
 class GameRoom(db.Document):
     members = db.ListField(db.EmbeddedDocumentField(Player),default=list)
     waiting = db.BooleanField(default=True)
+    currentQuestion = db.StringField(default="")
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 
@@ -53,13 +57,15 @@ class Word(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 
+
+class Answer(db.EmbeddedDocument):
+    text = db.StringField()
+
+
 class Question(db.Document):
     question = db.StringField()
+    answer = db.ListField(db.EmbeddedDocumentField(Answer),default=list)
+    correct_index = db.IntField(default=0)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
-
-class Answer(db.Document):
-    answer = db.StringField()
-    # forign key to answer
-
 
 

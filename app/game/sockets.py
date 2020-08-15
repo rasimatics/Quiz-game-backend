@@ -1,5 +1,8 @@
 from app import socketio
 from flask_socketio import join_room,emit
+from app.models import GameRoom, Player, Question
+from flask import jsonify
+from bson import ObjectId
 
 @socketio.on('join-room')
 def handle_join_room(data):
@@ -18,8 +21,12 @@ def handle_join_room(data):
 # def handle_disconnect():
 
 
-# join to the room
-# def join_room()
+# start game -> game information
+# @socketio.on('start-game')
+# def handle_start(data):
+#     socketio.emit('game-info',data)
+
+
 
 # give information about game-status
 # def game_info() different for each user related to username
