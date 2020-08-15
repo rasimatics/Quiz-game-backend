@@ -36,3 +36,5 @@ class CreateOrJoin(Resource):
 
 api.add_resource(CreateOrJoin, '/start-game/')
 
+
+

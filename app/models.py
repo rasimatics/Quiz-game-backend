@@ -10,6 +10,8 @@ class User(db.Document):
     password = db.StringField()
     email = db.EmailField()
     point = db.IntField(default=0)
+    win = db.IntField(default=0)
+    lose = db.IntField(default=0)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
     def clean(self):

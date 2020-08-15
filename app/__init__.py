@@ -16,7 +16,7 @@ socketio = SocketIO(logger=True,engineio_logger=True,cors_allowed_origins="*"	)
 
 
 from .users import routes
-from .game import  routes
+from .game import  routes, sockets
 
 def create_app():
 	app = Flask(__name__)
