@@ -1,3 +1,14 @@
+from app import socketio
+from flask_socketio import join_room,emit
+
+@socketio.on('join-room')
+def handle_join_room(data):
+    join_room(data['room'])
+    socketio.emit('join-room-info', data, data['room'])
+
+
+
+
 # disconnect
 # def handle_disconnect()
 

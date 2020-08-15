@@ -29,7 +29,7 @@ class CreateOrJoin(Resource):
             # start game
             # return success response
 
-        return make_response(jsonify({"game_created":True}))
+        return make_response(jsonify(gameroom),201)
 
 
 

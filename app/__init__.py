@@ -3,7 +3,7 @@ from flask_mongoengine import MongoEngine
 from flask_login import LoginManager
 from flask_restful import Api
 from flask_cors import CORS
-
+from flask_socketio import SocketIO
 
 
 
@@ -12,8 +12,7 @@ db = MongoEngine()
 loginmanager = LoginManager()
 api = Api()
 cors = CORS()
-
-loginmanager.login_message = 'Hello world'
+socketio = SocketIO(logger=True,engineio_logger=True,cors_allowed_origins="*"	)
 
 
 from .users import routes
@@ -30,11 +29,8 @@ def create_app():
 	loginmanager.init_app(app)
 	api.init_app(app)
 	cors.init_app(app, resources={"*": {"origins":"*"}})
+	socketio.init_app(app)
 
 
-	# register blueprints
-	# app.register_blueprint(users)
-	# app.register_blueprint(blueprint2)
-
-	return app
+	return socketio,app
 
