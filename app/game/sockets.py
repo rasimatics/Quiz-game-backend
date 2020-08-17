@@ -31,12 +31,16 @@ def handle_start(data):
     word = Word.objects[getRandomIndex(Word)]
     question = Question.objects[getRandomIndex(Question)]
 
+    word.usage += 1
+    word.save()
+
     gameroom.members[0].word = word.word
     gameroom.members[1].word = word.word
     gameroom.currentQuestion = question.question
     gameroom.save()
 
     json_data = gameroom.to_json()
+
     socketio.emit('game-info',json.loads(json_data),data['room'])
 
 
