@@ -1,13 +1,15 @@
 from app import socketio
 from flask_socketio import join_room,emit
-from app.models import GameRoom, Player, Question
+from app.models import GameRoom, Player, Question,Word
 from flask import jsonify
 import json
+from .utils import *
 
 @socketio.on('join-room')
 def handle_join_room(data):
     join_room(data['room'])
-    socketio.emit('join-room-info', {"info":"connected"}, data['room'])
+    data['info'] = 'connected'
+    socketio.emit('join-room-info', data, data['room'])
 """
 {
  "room":"123",
@@ -25,8 +27,15 @@ def handle_join_room(data):
 @socketio.on('start-game')
 def handle_start(data):
     gameroom = GameRoom.objects(id=data['room']).first()
+
+    word = Word.objects[getRandomIndex(Word)]
+
+    gameroom.members[0].word = word.word
+    gameroom.members[1].word = word.word
+    gameroom.save()
+
     json_data = gameroom.to_json()
-    socketio.emit('game-info',json.loads(json_data))
+    socketio.emit('game-info',json.loads(json_data),data['room'])
 
 
 
