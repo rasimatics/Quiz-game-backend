@@ -29,9 +29,11 @@ def handle_start(data):
     gameroom = GameRoom.objects(id=data['room']).first()
 
     word = Word.objects[getRandomIndex(Word)]
+    question = Question.objects[getRandomIndex(Question)]
 
     gameroom.members[0].word = word.word
     gameroom.members[1].word = word.word
+    gameroom.currentQuestion = question.question
     gameroom.save()
 
     json_data = gameroom.to_json()
