@@ -37,11 +37,16 @@ def handle_start(data):
 
     gameroom.members[0].word = word.word
     gameroom.members[1].word = word.word
+
+    length = len(word.word)
+    for i in range(length-1):
+        gameroom.members[0].found_letters.append("")
+        gameroom.members[1].found_letters.append("")
+   
     gameroom.currentQuestion = question.question
     gameroom.save()
-
+    
     json_data = gameroom.to_json()
-
     socketio.emit('game-info',json.loads(json_data),data['room'])
 
 
