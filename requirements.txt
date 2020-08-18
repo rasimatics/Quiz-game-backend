@@ -9,4 +9,6 @@ marshmallow==3.7.1
 marshmallow-mongoengine==0.11.0
 mongoengine==0.20.0
 dnspython==1.16.0
+gunicorn==19.9.0
+
 
