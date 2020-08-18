@@ -32,5 +32,5 @@ def create_app():
 	socketio.init_app(app)
 
 
-	return socketio,app
+	return app
 
