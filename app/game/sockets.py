@@ -10,6 +10,7 @@ def handle_join_room(data):
     join_room(data['room'])
     data['info'] = 'connected'
     socketio.emit('join-room-info', data, data['room'])
+    
 """
 {
  "room":"123",
