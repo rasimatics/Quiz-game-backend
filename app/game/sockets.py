@@ -39,9 +39,8 @@ def handle_start(data):
     gameroom.members[1].word = word.word
 
     length = len(word.word)
-    for i in range(length-1):
-        gameroom.members[0].found_letters.append("")
-        gameroom.members[1].found_letters.append("")
+    gameroom.members[0].found_letters = ["" for i in range(length-1)]
+    gameroom.members[1].found_letters = ["" for i in range(length-1)]
    
     gameroom.currentQuestion = question.question
     gameroom.save()
