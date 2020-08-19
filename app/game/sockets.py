@@ -28,6 +28,7 @@ def handle_join_room(data):
 # only first time when game starts
 @socketio.on('start-game')
 def handle_start(data):
+    #Task1 exclude given questions
     gameroom = GameRoom.objects(id=data['room']).first()
 
     word = Word.objects[getRandomIndex(Word)]
@@ -60,15 +61,19 @@ def check_answer(data):
     answer_question.answers.append(player_answer)
     answer_question.save()
 
+
     if len(answer_question.answers) == 2:
         answer_question.bothAnswered = True
         answer_question.save()
     
+    #Task2 check answers of users
     if answer_question.bothAnswered:
         print("check answer!!!!!!")
+
+    #Task3 add emits
 
     
 
 
 # guess word
-# def check_guess()
+# def handle_guess()
