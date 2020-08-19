@@ -2,7 +2,7 @@ from flask_restful import Resource
 from flask import make_response, jsonify
 from flask_login import login_required,current_user
 from app import api
-from app.models import GameRoom, Player, Answer, Question
+from app.models import GameRoom, Player, Question
 
 
 # join to existing room else create room

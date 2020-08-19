@@ -1,6 +1,6 @@
 from app import socketio
 from flask_socketio import join_room,emit
-from app.models import GameRoom, Player, Question,Word
+from app.models import GameRoom, Player, Question, Word, AnsweredQuestion, PlayerAnswer
 from flask import jsonify
 import json
 from .utils import *
@@ -24,13 +24,17 @@ def handle_join_room(data):
 # def handle_disconnect():
 
 
-# start game -> game information
+# start game -> game information 
+# only first time when game starts
 @socketio.on('start-game')
 def handle_start(data):
     gameroom = GameRoom.objects(id=data['room']).first()
 
     word = Word.objects[getRandomIndex(Word)]
     question = Question.objects[getRandomIndex(Question)]
+
+    answered_question = AnsweredQuestion(question=question.id,room=gameroom.id)
+    answered_question.save()
 
     word.usage += 1
     word.save()
@@ -49,12 +53,16 @@ def handle_start(data):
     socketio.emit('game-info',json.loads(json_data),data['room'])
 
 
+@socketio.on('answer-question')
+def check_answer(data):
+    answer_question = AnsweredQuestion.objects(room=data['room']).first()
+    player_answer = PlayerAnswer(username=data['username'],answer=data['answer'])
+    answer_question.answers.append(player_answer)
+    answer_question.save()
 
-# give information about game-status
-# def game_info() different for each user related to username
+    # check both answered or not
+    
 
-# answer question
-# def check_answer()
 
 # guess word
 # def check_guess()

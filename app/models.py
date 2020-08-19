@@ -57,15 +57,23 @@ class Word(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 
-
-class Answer(db.EmbeddedDocument):
-    text = db.StringField()
-
-
 class Question(db.Document):
     question = db.StringField()
-    answer = db.ListField(db.EmbeddedDocumentField(Answer),default=list)
+    answer = db.ListField()
     correct_index = db.IntField(default=0)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
+
+class PlayerAnswer(db.EmbeddedDocument):
+    username = db.StringField()
+    answer = db.StringField()
+
+
+class AnsweredQuestion(db.Document):
+    answers = db.ListField(db.EmbeddedDocumentField(PlayerAnswer))
+    bothAnswered = db.BooleanField(default=False)
+    room = db.ReferenceField(GameRoom)
+    question = db.ReferenceField(Question)
+    created_at = db.DateTimeField(default=datetime.datetime.utcnow)
+
 
 
