@@ -33,7 +33,7 @@ def handle_start(data):
     word = Word.objects[getRandomIndex(Word)]
     question = Question.objects[getRandomIndex(Question)]
 
-    answered_question = AnsweredQuestion(question=question.id,room=gameroom.id)
+    answered_question = AnsweredQuestion(questions=[question.id,],room=gameroom.id)
     answered_question.save()
 
     word.usage += 1
@@ -60,7 +60,13 @@ def check_answer(data):
     answer_question.answers.append(player_answer)
     answer_question.save()
 
-    # check both answered or not
+    if len(answer_question.answers) == 2:
+        answer_question.bothAnswered = True
+        answer_question.save()
+    
+    if answer_question.bothAnswered:
+        print("check answer!!!!!!")
+
     
 
 

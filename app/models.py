@@ -72,7 +72,7 @@ class AnsweredQuestion(db.Document):
     answers = db.ListField(db.EmbeddedDocumentField(PlayerAnswer))
     bothAnswered = db.BooleanField(default=False)
     room = db.ReferenceField(GameRoom)
-    question = db.ReferenceField(Question)
+    questions = db.ListField(db.ReferenceField(Question))
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 
