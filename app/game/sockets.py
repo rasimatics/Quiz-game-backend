@@ -28,7 +28,6 @@ def handle_join_room(data):
 # only first time when game starts
 @socketio.on('start-game')
 def handle_start(data):
-    #Task1 exclude given questions
     gameroom = GameRoom.objects(id=data['room']).first()
 
     word = Word.objects[getRandomIndex(Word)]
@@ -68,9 +67,25 @@ def check_answer(data):
     
     #Task2 check answers of users
     if answer_question.bothAnswered:
-        print("check answer!!!!!!")
+        user0 = answer_question.answers[0]
+        user1 = answer_question.answers[1]
 
-    #Task3 add emits
+        question_object = answer_question.questions[-1]
+
+
+        question = Question.objects(id=question_object.id).first()
+
+        correctAnswer = int(question.answer[question.correct_index])
+
+        if abs(int(user0.answer)-correctAnswer) > abs(int(user1.answer)-correctAnswer):
+            socketio.emit('answer-info',{"info":f"{user1.username} found correct answer","correct_answer":correctAnswer })
+        elif abs(int(user0.answer)-correctAnswer) < abs(int(user1.answer)-correctAnswer):
+            socketio.emit('answer-info',{"info":f"{user0.username} found correct answer","correct_answer":correctAnswer })
+        else:
+            socketio.emit('answer-info',{"info":f"{user0.username} and {user1.username} found correct answer","correct_answer":correctAnswer })
+
+        # socket emit all needed data
+        socketio.emit('game-info',{"info":"round finished"})
 
     
 
