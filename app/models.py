@@ -39,13 +39,13 @@ class User(db.Document):
 
 class Player(db.EmbeddedDocument):
     name = db.StringField()
-    word = db.StringField(default="")
     found_letters = db.ListField(db.StringField(),default=list)
 
     
 
 class GameRoom(db.Document):
     members = db.ListField(db.EmbeddedDocumentField(Player),default=list)
+    word = db.StringField(default="")
     waiting = db.BooleanField(default=True)
     currentQuestion = db.StringField(default="")
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
