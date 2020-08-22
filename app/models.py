@@ -48,6 +48,8 @@ class GameRoom(db.Document):
     word = db.StringField(default="")
     waiting = db.BooleanField(default=True)
     currentQuestion = db.StringField(default="")
+    gameFinished = db.BooleanField(default=False)
+    winner = db.StringField(default="")
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 

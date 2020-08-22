@@ -1,6 +1,6 @@
 from app import socketio
 from flask_socketio import join_room,emit
-from app.models import GameRoom, Player, Question, Word, AnsweredQuestion, PlayerAnswer
+from app.models import GameRoom, Player, Question, Word, User, AnsweredQuestion, PlayerAnswer
 from flask import jsonify
 import json
 from .utils import *
@@ -76,7 +76,7 @@ def check_answer(data):
 
         correctAnswer = int(question.answer[question.correct_index])
 
-        # Task actions in each case
+        # Task1 actions in each case
         if abs(int(user0.answer)-correctAnswer) > abs(int(user1.answer)-correctAnswer):
             socketio.emit('answer-info',{"info":f"{user1.username} found correct answer","correct_answer":correctAnswer })
         elif abs(int(user0.answer)-correctAnswer) < abs(int(user1.answer)-correctAnswer):
@@ -94,8 +94,29 @@ def check_answer(data):
 def handle_guess(data):
     gameroom = GameRoom.objects(id=data['room']).first()
     if gameroom.word.rstrip() == data['word']:
-        data['info'] = f"{data['username']} found word and win the game!" 
-        # actions with db
+        data['info'] = f"{data['username']} found word and win the game!"
+
+        if gameroom.members[0].name == data['username']:
+            winner = gameroom.members[0].name
+            loser = gameroom.members[1].name
+        else:
+            winner = gameroom.members[1].name
+            loser = gameroom.members[0].name
+
+        gameroom.gameFinished = True
+        gameroom.winner = winner
+        gameroom.save()
+
+        user = User.objects(username=winner).first()
+        user.win+=1
+        user.save()
+
+        user = User.objects(username=loser).first()
+        user.lose+=1
+        user.save()
+
+        # Task modify point of user
+        # Task clean the room and answer-question documents
     else:
         data['info'] = f"{data['username']} guessed wrong!"
 
