@@ -112,8 +112,9 @@ def check_answer(data):
             socketio.emit(
                 'answer-info', {"info": f"{user0.username} and {user1.username} found correct answer", "correct_answer": correctAnswer})
 
-        # socket emit all needed data
-        socketio.emit('game-info', {"info": "round finished"})
+        # Task get new question
+        # Task clean answers and modify answered-question document
+        socketio.emit('game-info', data)
 
 
 @socketio.on('guess-word')
