@@ -8,10 +8,10 @@ from app.models import GameRoom, Player, Question
 # join to existing room else create room
 class CreateOrJoin(Resource):
     @login_required
-    def post(self):
-        # check not his room 
+    def post(self): 
         gameroom = GameRoom.objects(waiting=True).order_by("created_at").first()
         player = Player(name=current_user.username)
+
         # join existing room
         if gameroom:
             gameroom.waiting = False

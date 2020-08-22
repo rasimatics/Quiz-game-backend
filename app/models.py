@@ -9,7 +9,7 @@ class User(db.Document):
     username = db.StringField()
     password = db.StringField()
     email = db.EmailField()
-    point = db.IntField(default=0)
+    point = db.IntField(default=500)
     win = db.IntField(default=0)
     lose = db.IntField(default=0)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)

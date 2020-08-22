@@ -11,8 +11,13 @@ def getRandomIndex(modelName):
 def finish_game(gameroom,winner,loser):
     gameroom.gameFinished = True
     gameroom.winner = winner.username
+    gameroom.currentQuestion= ""
+    gameroom.members[0].found_letters = list
+    gameroom.members[1].found_letters = list
+    gameroom.word = ""
     gameroom.save()
 
+    winner.point+=100
     winner.win+=1
     winner.save()
 
