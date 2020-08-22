@@ -103,17 +103,11 @@ def handle_guess(data):
             winner = gameroom.members[1].name
             loser = gameroom.members[0].name
 
-        gameroom.gameFinished = True
-        gameroom.winner = winner
-        gameroom.save()
+        
+        win_user = User.objects(username=winner).first()
+        lose_user = User.objects(username=loser).first()
 
-        user = User.objects(username=winner).first()
-        user.win+=1
-        user.save()
-
-        user = User.objects(username=loser).first()
-        user.lose+=1
-        user.save()
+        finish_game(gameroom,win_user,lose_user)
 
         # Task modify point of user
         # Task clean the room and answer-question documents
@@ -121,3 +115,6 @@ def handle_guess(data):
         data['info'] = f"{data['username']} guessed wrong!"
 
     socketio.emit('game-info',data)
+
+
+
