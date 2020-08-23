@@ -25,3 +25,12 @@ def finish_game(gameroom,winner,loser):
 
     loser.lose+=1
     loser.save()
+
+
+def get_index_of_word(word,member):
+    i = -1
+    for a in range(len(word)):
+        if member.found_letters[i] == "":
+            break
+        i -= 1
+    return i

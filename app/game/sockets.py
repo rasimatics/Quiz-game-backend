@@ -80,37 +80,36 @@ def check_answer(data):
         correctAnswer = int(question.answer[question.correct_index])
 
         # find index of found_letters
-        i = -1
-        for a in range(len(gameroom.word)):
-            if member0.found_letters[i] == "":
-                break
-            i -= 1
-
+        i0 = get_index_of_word(gameroom.word,member0)
+        i1 = get_index_of_word(gameroom.word,member1)
+        
         if abs(int(user0.answer)-correctAnswer) > abs(int(user1.answer)-correctAnswer):
             if member0.name == user1.username:
-                member0.found_letters[i] = gameroom.word[i-1]
+                member0.found_letters[i0] = gameroom.word[i0-1]
             else:
-                member1.found_letters[i] = gameroom.word[i-1]
+                member1.found_letters[i1] = gameroom.word[i1-1]
             gameroom.save()
+
             socketio.emit(
                 'answer-info', {"info": f"{user1.username} found correct answer", "correct_answer": correctAnswer})
         elif abs(int(user0.answer)-correctAnswer) < abs(int(user1.answer)-correctAnswer):
             if member0.name == user0.username:
-                member0.found_letters[i] = gameroom.word[i-1]
+                member0.found_letters[i0] = gameroom.word[i0-1]
             else:
-                member1.found_letters[i] = gameroom.word[i-1]
+                member1.found_letters[i1] = gameroom.word[i1-1]
             gameroom.save()
+
             socketio.emit(
                 'answer-info', {"info": f"{user0.username} found correct answer", "correct_answer": correctAnswer})
         else:
-            member0.found_letters[i] = gameroom.word[i-1]
-            member1.found_letters[i] = gameroom.word[i-1]
+            member0.found_letters[i0] = gameroom.word[i0-1]
+            member1.found_letters[i1] = gameroom.word[i1-1]
             gameroom.save()
+
             socketio.emit(
                 'answer-info', {"info": f"{user0.username} and {user1.username} found correct answer", "correct_answer": correctAnswer})
 
         # Task get new question
-        # Task clean answers and modify answered-question document
         socketio.emit('game-info', data)
 
 
