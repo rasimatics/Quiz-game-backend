@@ -12,8 +12,10 @@ def finish_game(gameroom,winner,loser):
     gameroom.gameFinished = True
     gameroom.winner = winner.username
     gameroom.currentQuestion= ""
-    gameroom.members[0].found_letters = list
-    gameroom.members[1].found_letters = list
+    gameroom.members[0].found_letters.clear()
+    gameroom.members[1].found_letters.clear()
+    gameroom.answers.clear()
+    gameroom.questions.clear()
     gameroom.word = ""
     gameroom.save()
 

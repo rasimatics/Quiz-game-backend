@@ -1,6 +1,6 @@
 from app import socketio
 from flask_socketio import join_room, emit
-from app.models import GameRoom, Player, Question, Word, User, AnsweredQuestion, PlayerAnswer
+from app.models import GameRoom, Player, Question, Word, User, PlayerAnswer
 from flask import jsonify
 import json
 from .utils import *
@@ -36,9 +36,7 @@ def handle_start(data):
         word = Word.objects[getRandomIndex(Word)]
         question = Question.objects[getRandomIndex(Question)]
 
-        answered_question = AnsweredQuestion(
-            questions=[question.id, ], room=gameroom.id)
-        answered_question.save()
+        gameroom.questions.append(question.id)
 
         word.usage += 1
         word.save()
@@ -58,25 +56,24 @@ def handle_start(data):
 
 @socketio.on('answer-question')
 def check_answer(data):
-    answer_question = AnsweredQuestion.objects(room=data['room']).first()
+    gameroom = GameRoom.objects(id=data['room']).first()
     player_answer = PlayerAnswer(
         username=data['username'], answer=data['answer'])
-    answer_question.answers.append(player_answer)
-    answer_question.save()
+    gameroom.answers.append(player_answer)
+    gameroom.save()
 
-    gameroom = GameRoom.objects(id=data['room']).first()
     member0 = gameroom.members[0]
     member1 = gameroom.members[1]
 
-    if len(answer_question.answers) == 2:
-        answer_question.bothAnswered = True
-        answer_question.save()
+    if len(gameroom.answers) == 2:
+        gameroom.bothAnswered = True
+        gameroom.save()
 
-    if answer_question.bothAnswered:
-        user0 = answer_question.answers[0]
-        user1 = answer_question.answers[1]
+    if gameroom.bothAnswered:
+        user0 = gameroom.answers[0]
+        user1 = gameroom.answers[1]
 
-        question_object = answer_question.questions[-1]
+        question_object = gameroom.questions[-1]
 
         question = Question.objects(id=question_object.id).first()
 

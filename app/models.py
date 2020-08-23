@@ -41,17 +41,6 @@ class Player(db.EmbeddedDocument):
     name = db.StringField()
     found_letters = db.ListField(db.StringField(),default=list)
 
-    
-
-class GameRoom(db.Document):
-    members = db.ListField(db.EmbeddedDocumentField(Player),default=list)
-    word = db.StringField(default="")
-    waiting = db.BooleanField(default=True)
-    currentQuestion = db.StringField(default="")
-    gameFinished = db.BooleanField(default=False)
-    winner = db.StringField(default="")
-    created_at = db.DateTimeField(default=datetime.datetime.utcnow)
-
 
 class Word(db.Document):
     word = db.StringField(max_length=7)
@@ -70,12 +59,22 @@ class PlayerAnswer(db.EmbeddedDocument):
     answer = db.StringField()
 
 
-class AnsweredQuestion(db.Document):
-    answers = db.ListField(db.EmbeddedDocumentField(PlayerAnswer))
+
+    
+
+class GameRoom(db.Document):
+    word = db.StringField(default="")
+    waiting = db.BooleanField(default=True)
+    currentQuestion = db.StringField(default="")
+    gameFinished = db.BooleanField(default=False)
+    winner = db.StringField(default="")
     bothAnswered = db.BooleanField(default=False)
-    room = db.ReferenceField(GameRoom)
+    members = db.ListField(db.EmbeddedDocumentField(Player),default=list)
+    answers = db.ListField(db.EmbeddedDocumentField(PlayerAnswer))
     questions = db.ListField(db.ReferenceField(Question))
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
+
+
 
 
 
