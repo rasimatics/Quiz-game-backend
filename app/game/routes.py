@@ -12,6 +12,9 @@ class CreateOrJoin(Resource):
         gameroom = GameRoom.objects(waiting=True).order_by("created_at").first()
         player = Player(name=current_user.username)
 
+        current_user.point-=50
+        current_user.save()
+        
         # join existing room
         if gameroom:
             gameroom.waiting = False

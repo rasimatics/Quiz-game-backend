@@ -1,5 +1,6 @@
 import random
 
+# get random index related to model objects
 def getRandomIndex(modelName):
     count = modelName.objects.count()
     number = random.randint(0,1000)
@@ -7,7 +8,7 @@ def getRandomIndex(modelName):
     return index
 
 
-
+# game finish: modify gameroom
 def finish_game(gameroom,winner,loser):
     gameroom.gameFinished = True
     gameroom.winner = winner.username
@@ -27,6 +28,7 @@ def finish_game(gameroom,winner,loser):
     loser.save()
 
 
+# get index of found_letter
 def get_index_of_word(word,member):
     i = -1
     for a in range(len(word)):

@@ -6,6 +6,7 @@ import json
 from .utils import *
 
 
+# after room created join room
 @socketio.on('join-room')
 def handle_join_room(data):
     join_room(data['room'])
@@ -54,6 +55,7 @@ def handle_start(data):
     socketio.emit('game-info', json.loads(json_data), data['room'])
 
 
+# user answer question
 @socketio.on('answer-question')
 def check_answer(data):
     gameroom = GameRoom.objects(id=data['room']).first()
@@ -113,6 +115,7 @@ def check_answer(data):
         socketio.emit('game-info', data)
 
 
+# user attempt to guess word
 @socketio.on('guess-word')
 def handle_guess(data):
     gameroom = GameRoom.objects(id=data['room']).first()

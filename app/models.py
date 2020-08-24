@@ -54,13 +54,11 @@ class Question(db.Document):
     correct_index = db.IntField(default=0)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
+
 class PlayerAnswer(db.EmbeddedDocument):
     username = db.StringField()
     answer = db.StringField()
 
-
-
-    
 
 class GameRoom(db.Document):
     word = db.StringField(default="")
