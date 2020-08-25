@@ -50,7 +50,7 @@ class Word(db.Document):
 
 class Question(db.Document):
     question = db.StringField()
-    answer = db.ListField()
+    answer = db.ListField(db.StringField())
     correct_index = db.IntField(default=0)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
@@ -69,7 +69,7 @@ class GameRoom(db.Document):
     bothAnswered = db.BooleanField(default=False)
     members = db.ListField(db.EmbeddedDocumentField(Player),default=list)
     answers = db.ListField(db.EmbeddedDocumentField(PlayerAnswer))
-    questions = db.ListField(db.ReferenceField(Question))
+    questions = db.ListField(db.StringField())
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 

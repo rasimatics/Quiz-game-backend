@@ -13,6 +13,14 @@ def handle_join_room(data):
     data['info'] = 'connected'
     socketio.emit('join-room-info', data, data['room'])
 
+# add question to db
+# @socketio.on('add-question')
+# def handle_add(data):
+#     question = Question(question=data['question'],answer=[data['answer'],])
+#     question.save()
+#     socketio.emit('game-info', data)
+
+
 
 """
 {
@@ -37,7 +45,7 @@ def handle_start(data):
         word = Word.objects[getRandomIndex(Word)]
         question = Question.objects[getRandomIndex(Question)]
 
-        gameroom.questions.append(question.id)
+        gameroom.questions.append(str(question.id))
 
         word.usage += 1
         word.save()
@@ -71,13 +79,14 @@ def check_answer(data):
         gameroom.bothAnswered = True
         gameroom.save()
 
+    # check answers
     if gameroom.bothAnswered:
         user0 = gameroom.answers[0]
         user1 = gameroom.answers[1]
 
-        question_object = gameroom.questions[-1]
+        question_id = gameroom.questions[-1]
 
-        question = Question.objects(id=question_object.id).first()
+        question = Question.objects(id=question_id).first()
 
         correctAnswer = int(question.answer[question.correct_index])
 
@@ -111,8 +120,15 @@ def check_answer(data):
             socketio.emit(
                 'answer-info', {"info": f"{user0.username} and {user1.username} found correct answer", "correct_answer": correctAnswer})
 
-        # Task get new question
-        socketio.emit('game-info', data)
+        question = Question.objects(__raw__={"_id" : {"$nin" : gameroom.questions}})[getRandomIndex(Question)]
+        gameroom.questions.append(str(question.id))
+        gameroom.currentQuestion = question.question
+        gameroom.bothAnswered = False
+        gameroom.update(set__answers=[])
+        gameroom.save()
+
+        json_data = gameroom.to_json()
+        socketio.emit('game-info', json.loads(json_data))
 
 
 # user attempt to guess word
