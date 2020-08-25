@@ -13,12 +13,13 @@ def handle_join_room(data):
     data['info'] = 'connected'
     socketio.emit('join-room-info', data, data['room'])
 
+
 # add question to db
-# @socketio.on('add-question')
-# def handle_add(data):
-#     question = Question(question=data['question'],answer=[data['answer'],])
-#     question.save()
-#     socketio.emit('game-info', data)
+@socketio.on('add-question')
+def handle_add(data):
+    question = Question(question=data['question'],answer=[data['answer'],])
+    question.save()
+    socketio.emit('game-info', data)
 
 
 
