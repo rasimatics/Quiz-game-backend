@@ -4,6 +4,7 @@ from app.models import GameRoom, Player, Question, Word, User, PlayerAnswer
 from flask import jsonify
 import json
 from .utils import *
+import random
 
 
 # after room created join room
@@ -132,7 +133,11 @@ def check_answer(data):
             finish_game(gameroom,seconduser,firstuser)
             socketio.emit('answer-info', {"info": "Game finished"})
         else:
-            question = Question.objects(__raw__={"_id" : {"$nin" : gameroom.questions}})[getRandomIndex(Question)]
+            # Task get random question not in list
+            questions = Question.objects(__raw__={"_id" : {"$nin" : gameroom.questions}})
+            number = questions.count()
+            question = Question.objects(__raw__={"_id" : {"$nin" : gameroom.questions}})[random.randint(0,1000)%number]
+            
             gameroom.questions.append(str(question.id))
             gameroom.currentQuestion = question.question
             gameroom.bothAnswered = False
