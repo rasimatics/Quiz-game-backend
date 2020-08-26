@@ -121,12 +121,23 @@ def check_answer(data):
             socketio.emit(
                 'answer-info', {"info": f"{user0.username} and {user1.username} found correct answer", "correct_answer": correctAnswer})
 
-        question = Question.objects(__raw__={"_id" : {"$nin" : gameroom.questions}})[getRandomIndex(Question)]
-        gameroom.questions.append(str(question.id))
-        gameroom.currentQuestion = question.question
-        gameroom.bothAnswered = False
-        gameroom.update(set__answers=[])
-        gameroom.save()
+        # check user found all letters or not
+        firstuser = User.objects(username=member0.name).first()
+        seconduser = User.objects(username=member1.name).first()
+
+        if member0.found_letters[0] != "":
+            finish_game(gameroom,firstuser,seconduser)
+            socketio.emit('answer-info', {"info": "Game finished"})
+        elif member1.found_letters[0] != "":
+            finish_game(gameroom,seconduser,firstuser)
+            socketio.emit('answer-info', {"info": "Game finished"})
+        else:
+            question = Question.objects(__raw__={"_id" : {"$nin" : gameroom.questions}})[getRandomIndex(Question)]
+            gameroom.questions.append(str(question.id))
+            gameroom.currentQuestion = question.question
+            gameroom.bothAnswered = False
+            gameroom.update(set__answers=[])
+            gameroom.save()
 
         json_data = gameroom.to_json()
         socketio.emit('game-info', json.loads(json_data))
