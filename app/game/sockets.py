@@ -77,25 +77,26 @@ def check_answer(data):
     member0 = gameroom.members[0]
     member1 = gameroom.members[1]
 
+    # both users answered to the question
     if len(gameroom.answers) == 2:
         gameroom.bothAnswered = True
         gameroom.save()
 
     # check answers
     if gameroom.bothAnswered:
+        # get users' answers
         user0 = gameroom.answers[0]
         user1 = gameroom.answers[1]
 
         question_id = gameroom.questions[-1]
-
         question = Question.objects(id=question_id).first()
-
         correctAnswer = int(question.answer[question.correct_index])
 
         # find index of found_letters
         i0 = get_index_of_word(gameroom.word,member0)
         i1 = get_index_of_word(gameroom.word,member1)
         
+        # user1 found correct answer
         if abs(int(user0.answer)-correctAnswer) > abs(int(user1.answer)-correctAnswer):
             if member0.name == user1.username:
                 member0.found_letters[i0] = gameroom.word[i0-1]
@@ -105,6 +106,8 @@ def check_answer(data):
 
             socketio.emit(
                 'answer-info', {"info": f"{user1.username} found correct answer", "correct_answer": correctAnswer})
+        
+        # user0 found correct answer
         elif abs(int(user0.answer)-correctAnswer) < abs(int(user1.answer)-correctAnswer):
             if member0.name == user0.username:
                 member0.found_letters[i0] = gameroom.word[i0-1]
@@ -114,6 +117,8 @@ def check_answer(data):
 
             socketio.emit(
                 'answer-info', {"info": f"{user0.username} found correct answer", "correct_answer": correctAnswer})
+        
+        # both user found correct answer
         else:
             member0.found_letters[i0] = gameroom.word[i0-1]
             member1.found_letters[i1] = gameroom.word[i1-1]
@@ -126,12 +131,17 @@ def check_answer(data):
         firstuser = User.objects(username=member0.name).first()
         seconduser = User.objects(username=member1.name).first()
 
+        # member0 found all letters
         if member0.found_letters[0] != "":
             finish_game(gameroom,firstuser,seconduser)
             socketio.emit('answer-info', {"info": "Game finished"})
+
+        # member1 found all letters
         elif member1.found_letters[0] != "":
             finish_game(gameroom,seconduser,firstuser)
             socketio.emit('answer-info', {"info": "Game finished"})
+        
+        # none of users found all letters game continues
         else:
             # Task get random question not in list
             question = Question.objects[getRandomIndex(Question)]
@@ -167,9 +177,6 @@ def handle_guess(data):
             lose_user = User.objects(username=loser).first()
 
             finish_game(gameroom, win_user, lose_user)
-
-            # Task modify point of user
-            # Task clean the room and answer-question documents
         else:
             data['info'] = f"{data['username']} guessed wrong!"
 
