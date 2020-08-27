@@ -134,10 +134,10 @@ def check_answer(data):
             socketio.emit('answer-info', {"info": "Game finished"})
         else:
             # Task get random question not in list
-            questions = Question.objects(__raw__={"_id" : {"$nin" : gameroom.questions}})
-            number = questions.count()
-            question = Question.objects(__raw__={"_id" : {"$nin" : gameroom.questions}})[random.randint(0,1000)%number]
-            
+            question = Question.objects[getRandomIndex(Question)]
+            while str(question.id) in gameroom.questions:
+                question = Question.objects[getRandomIndex(Question)]
+    
             gameroom.questions.append(str(question.id))
             gameroom.currentQuestion = question.question
             gameroom.bothAnswered = False
