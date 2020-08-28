@@ -41,7 +41,7 @@ def handle_add(data):
 # only first time when game starts
 @socketio.on('start-game')
 def handle_start(data):
-    gameroom = GameRoom.objects(id=data['room']).first()
+    gameroom = get_gameroom(data['room'])
 
     if gameroom.word == "":
         word = Word.objects[getRandomIndex(Word)]
@@ -68,7 +68,7 @@ def handle_start(data):
 # user answer question
 @socketio.on('answer-question')
 def check_answer(data):
-    gameroom = GameRoom.objects(id=data['room']).first()
+    gameroom = get_gameroom(data['room'])
     player_answer = PlayerAnswer(
         username=data['username'], answer=data['answer'])
     gameroom.answers.append(player_answer)
@@ -161,7 +161,7 @@ def check_answer(data):
 # user attempt to guess word
 @socketio.on('guess-word')
 def handle_guess(data):
-    gameroom = GameRoom.objects(id=data['room']).first()
+    gameroom = get_gameroom(data['room'])
     if not gameroom.gameFinished:
         if gameroom.word.rstrip() == data['word']:
             data['info'] = f"{data['username']} found word and win the game!"

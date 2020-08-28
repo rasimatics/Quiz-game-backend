@@ -1,4 +1,5 @@
 import random
+from app.models import GameRoom
 
 # get random index related to model objects
 def getRandomIndex(modelName):
@@ -36,3 +37,8 @@ def get_index_of_word(word,member):
             break
         i -= 1
     return i
+
+
+def get_gameroom(room):
+    gameroom = GameRoom.objects(id=room).first()
+    return gameroom
