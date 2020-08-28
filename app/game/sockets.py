@@ -54,7 +54,7 @@ def handle_start(data):
 
         gameroom.word = word.word
         length = len(word.word)
-        
+
         empty_list_word(gameroom,length)
 
         gameroom.currentQuestion = question.question
@@ -142,7 +142,6 @@ def check_answer(data):
         
         # none of users found all letters game continues
         else:
-            # Task get random question not in list
             question = Question.objects[getRandomIndex(Question)]
             while str(question.id) in gameroom.questions:
                 question = Question.objects[getRandomIndex(Question)]
