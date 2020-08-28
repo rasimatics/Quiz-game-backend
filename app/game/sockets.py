@@ -53,10 +53,9 @@ def handle_start(data):
         word.save()
 
         gameroom.word = word.word
-
         length = len(word.word)
-        gameroom.members[0].found_letters = ["" for i in range(length-1)]
-        gameroom.members[1].found_letters = ["" for i in range(length-1)]
+        
+        empty_list_word(gameroom,length)
 
         gameroom.currentQuestion = question.question
         gameroom.save()

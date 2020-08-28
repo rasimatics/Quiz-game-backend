@@ -42,3 +42,7 @@ def get_index_of_word(word,member):
 def get_gameroom(room):
     gameroom = GameRoom.objects(id=room).first()
     return gameroom
+
+def empty_list_word(gameroom,length):
+    gameroom.members[0].found_letters = ["" for i in range(length-1)]
+    gameroom.members[1].found_letters = ["" for i in range(length-1)]
