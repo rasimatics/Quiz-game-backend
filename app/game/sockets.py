@@ -104,7 +104,7 @@ def check_answer(data):
             gameroom.save()
 
             socketio.emit(
-                'answer-info', {"info": f"{user1.username} found correct answer", "correct_answer": correctAnswer})
+                'answer-info', {"info": f"{user1.username} found correct answer", "correct_answer": correctAnswer}, data['room'])
         
         # user0 found correct answer
         elif abs(int(user0.answer)-correctAnswer) < abs(int(user1.answer)-correctAnswer):
@@ -115,7 +115,7 @@ def check_answer(data):
             gameroom.save()
 
             socketio.emit(
-                'answer-info', {"info": f"{user0.username} found correct answer", "correct_answer": correctAnswer})
+                'answer-info', {"info": f"{user0.username} found correct answer", "correct_answer": correctAnswer}, data['room'])
         
         # both user found correct answer
         else:
@@ -124,7 +124,7 @@ def check_answer(data):
             gameroom.save()
 
             socketio.emit(
-                'answer-info', {"info": f"{user0.username} and {user1.username} found correct answer", "correct_answer": correctAnswer})
+                'answer-info', {"info": f"{user0.username} and {user1.username} found correct answer", "correct_answer": correctAnswer}, data['room'])
 
         # check user found all letters or not
         firstuser = User.objects(username=member0.name).first()
@@ -133,12 +133,12 @@ def check_answer(data):
         # member0 found all letters
         if member0.found_letters[0] != "":
             finish_game(gameroom,firstuser,seconduser)
-            socketio.emit('answer-info', {"info": "Game finished"})
+            socketio.emit('answer-info', {"info": "Game finished"}, data['room'])
 
         # member1 found all letters
         elif member1.found_letters[0] != "":
             finish_game(gameroom,seconduser,firstuser)
-            socketio.emit('answer-info', {"info": "Game finished"})
+            socketio.emit('answer-info', {"info": "Game finished"}, data['room'])
         
         # none of users found all letters game continues
         else:
@@ -153,7 +153,7 @@ def check_answer(data):
             gameroom.save()
 
         json_data = gameroom.to_json()
-        socketio.emit('game-info', json.loads(json_data))
+        socketio.emit('game-info', json.loads(json_data), data['room'])
 
 
 # user attempt to guess word
@@ -178,6 +178,6 @@ def handle_guess(data):
         else:
             data['info'] = f"{data['username']} guessed wrong!"
 
-        socketio.emit('game-info', data)
+        socketio.emit('game-info', data, data['room'])
     else:
-        socketio.emit('game-info', {"info": "Game finished"})
+        socketio.emit('game-info', {"info": "Game finished"}, data['room'])

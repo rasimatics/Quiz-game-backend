@@ -15,8 +15,8 @@ class User(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
     def clean(self):
-        self.password = generate_password_hash(self.password)
         super(User,self).clean()
+        self.password = generate_password_hash(self.password)
         
 
     def check_password(self,password):
