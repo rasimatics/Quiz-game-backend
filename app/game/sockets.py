@@ -1,7 +1,7 @@
 from app import socketio
 from flask_socketio import join_room, emit
 from app.models import GameRoom, Player, Question, Word, User, PlayerAnswer
-from flask import jsonify
+from flask import jsonify,request
 import json
 from .utils import *
 import random
@@ -33,8 +33,9 @@ def handle_add(data):
 
 
 # disconnect
-# @socketio.on('disconnect')
-# def handle_disconnect():
+@socketio.on('disconnect')
+def handle_disconnect():
+    print(f"{request.sid} disconnected!")
 
 
 # start game -> game information
