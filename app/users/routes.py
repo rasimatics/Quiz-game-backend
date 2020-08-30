@@ -53,7 +53,7 @@ class Login(Resource):
 
         if user and user.check_password(password):
             login_user(user)
-            return make_response(jsonify({"Info": "User signed in!"}),200)
+            return make_response(jsonify({"Info": f"{user.username} signed in!"}),200)
         else:
             return make_response(jsonify({"Error": "User cridentials are not correct"}), 400)
 

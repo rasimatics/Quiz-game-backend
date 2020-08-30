@@ -16,11 +16,12 @@ class User(db.Document):
 
     def clean(self):
         super(User,self).clean()
-        self.password = generate_password_hash(self.password)
+        self.password = generate_password_hash(self.password,'sha256')
         
 
     def check_password(self,password):
-        return check_password_hash(self.password,password)
+        return check_password_hash(pwhash=str(self.password),password=password)
+        
 
     @staticmethod
     def is_authenticated():
