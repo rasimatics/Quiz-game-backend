@@ -26,7 +26,7 @@ class CreateOrJoin(Resource):
             gameroom.save()
             g_id = gameroom.id
 
-            time.sleep(15) # 5s change to 10s
+            time.sleep(10) # 5s change to 10s
             gameroom = GameRoom.objects(id=g_id).first()
             if gameroom.waiting:
                 gameroom.hasBot = True
