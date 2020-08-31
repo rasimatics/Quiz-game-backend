@@ -17,18 +17,25 @@ class CreateOrJoin(Resource):
         if gameroom:
             gameroom.waiting = False
             gameroom.members.append(player)
+            gameroom.save()
 
         # create a new room
         else:
             gameroom = GameRoom()
             gameroom.members.append(player)
-            time.sleep(5) # 5s change to 8s
+            gameroom.save()
+            g_id = gameroom.id
+
+            time.sleep(15) # 5s change to 10s
+            gameroom = GameRoom.objects(id=g_id).first()
             if gameroom.waiting:
                 gameroom.hasBot = True
+                gameroom.waiting = False
                 bot = list(User.objects(isBot=True).aggregate([{'$sample':{"size":1}}]))[0]
                 player = Player(name=bot['username'])
                 gameroom.members.append(player)
-        gameroom.save()
+                gameroom.save()
+            gameroom.save()
         return make_response(jsonify(gameroom),201)
 
 
