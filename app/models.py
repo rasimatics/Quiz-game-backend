@@ -73,6 +73,7 @@ class GameRoom(db.Document):
     answers = db.ListField(db.EmbeddedDocumentField(PlayerAnswer))
     questions = db.ListField(db.StringField())
     hasBot = db.BooleanField(default=False)
+    botName = db.StringField(default="")
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 

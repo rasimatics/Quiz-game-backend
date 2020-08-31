@@ -33,6 +33,7 @@ class CreateOrJoin(Resource):
                 gameroom.waiting = False
                 bot = list(User.objects(isBot=True).aggregate([{'$sample':{"size":1}}]))[0]
                 player = Player(name=bot['username'])
+                gameroom.botName = bot['username']
                 gameroom.members.append(player)
                 gameroom.save()
             gameroom.save()

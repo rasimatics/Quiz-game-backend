@@ -49,20 +49,29 @@ def handle_start(data):
     gameroom = get_gameroom(data['room'])
 
     if gameroom.word == "":
+
+        # get word and question
         word = Word.objects[getRandomIndex(Word)]
         question = Question.objects[getRandomIndex(Question)]
-
         gameroom.questions.append(str(question.id))
 
+        # assign word to gameroom
         word.usage += 1
         word.save()
-
         gameroom.word = word.word
         length = len(word.word)
-
         empty_list_word(gameroom,length)
 
+        # assign question to  gameroom
         gameroom.currentQuestion = question.question
+
+
+        # in case bot exist get bot's answer
+        if gameroom.hasBot:
+            correctAnswer = question.answer[question.correct_index]
+            get_answer(gameroom,correctAnswer)
+
+        # save all changes
         gameroom.save()
 
 
@@ -157,6 +166,14 @@ def check_answer(data):
             gameroom.bothAnswered = False
             gameroom.update(set__answers=[])
             gameroom.save()
+             
+            #  in case bot exist get bot's answer
+            if gameroom.hasBot:
+                correctAnswer = question.answer[question.correct_index]
+                get_answer(gameroom,correctAnswer)
+
+
+           
 
         json_data = gameroom.to_json()
         socketio.emit('game-info', json.loads(json_data), data['room'])
