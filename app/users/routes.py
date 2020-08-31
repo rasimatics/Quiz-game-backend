@@ -29,7 +29,9 @@ class Register(Resource):
             return make_response(jsonify({"Email":"This email is taken"}),400)
 
         # save user in db
-        user = User(username=data['username'],password=data['password'],email=data['email'],isBot=data['isBot'])
+        user = User(username=data['username'],password=data['password'],email=data['email'])
+        if 'isBot' in data:
+            user.isBot = data['isBot']
         user.save()
 
         return make_response(jsonify(user),201)
