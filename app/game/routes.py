@@ -2,7 +2,8 @@ from flask_restful import Resource
 from flask import make_response, jsonify
 from flask_login import login_required,current_user
 from app import api
-from app.models import GameRoom, Player, Question
+from app.models import GameRoom, Player, Question,User
+import time
 
 
 # join to existing room else create room
@@ -12,7 +13,6 @@ class CreateOrJoin(Resource):
         gameroom = GameRoom.objects(waiting=True).order_by("created_at").first()
         player = Player(name=current_user.username)
 
-        
         # join existing room
         if gameroom:
             gameroom.waiting = False
@@ -22,11 +22,12 @@ class CreateOrJoin(Resource):
         else:
             gameroom = GameRoom()
             gameroom.members.append(player)
-            # wait
-            # if not user connect bot
-            # start game
-            # return success response
-
+            time.sleep(5) # 5s change to 8s
+            if gameroom.waiting:
+                gameroom.hasBot = True
+                bot = list(User.objects(isBot=True).aggregate([{'$sample':{"size":1}}]))[0]
+                player = Player(name=bot['username'])
+                gameroom.members.append(player)
         gameroom.save()
         return make_response(jsonify(gameroom),201)
 

@@ -10,6 +10,10 @@ import random
 # after room created join room
 @socketio.on('join-room')
 def handle_join_room(data):
+    user = User.objects(username=data['username']).first()
+    user.point -= 50
+    user.save()
+    
     join_room(data['room'])
     data['info'] = 'connected'
     socketio.emit('join-room-info', data, data['room'])
@@ -60,6 +64,7 @@ def handle_start(data):
 
         gameroom.currentQuestion = question.question
         gameroom.save()
+
 
     json_data = gameroom.to_json()
     socketio.emit('game-info', json.loads(json_data), data['room'])
@@ -181,4 +186,4 @@ def handle_guess(data):
 
         socketio.emit('game-info', data, data['room'])
     else:
-        socketio.emit('game-info', {"info": "Game finished"}, data['room'])
+        socketio.emit('guess-info', {"info": "Game finished"}, data['room'])

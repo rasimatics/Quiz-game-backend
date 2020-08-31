@@ -12,6 +12,7 @@ class User(db.Document):
     point = db.IntField(default=500)
     win = db.IntField(default=0)
     lose = db.IntField(default=0)
+    isBot = db.BooleanField(default=False)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
     def clean(self):
@@ -71,6 +72,7 @@ class GameRoom(db.Document):
     members = db.ListField(db.EmbeddedDocumentField(Player),default=list)
     answers = db.ListField(db.EmbeddedDocumentField(PlayerAnswer))
     questions = db.ListField(db.StringField())
+    hasBot = db.BooleanField(default=False)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 

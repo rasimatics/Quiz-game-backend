@@ -12,7 +12,7 @@ db = MongoEngine()
 loginmanager = LoginManager()
 api = Api()
 cors = CORS()
-socketio = SocketIO(logger=True,engineio_logger=True,cors_allowed_origins="*",ping_timeout=5)
+socketio = SocketIO(logger=True,engineio_logger=True,cors_allowed_origins="*")
 
 
 from .users import routes
