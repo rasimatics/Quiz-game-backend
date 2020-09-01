@@ -1,13 +1,13 @@
-from app import db
-from werkzeug.security import check_password_hash, generate_password_hash
+from app import db,bcrypt
 import datetime
-import random, string
+import random
+
 
 
 
 class User(db.Document):
     username = db.StringField()
-    password = db.StringField()
+    password = db.BinaryField()
     email = db.EmailField()
     point = db.IntField(default=500)
     win = db.IntField(default=0)
@@ -17,11 +17,11 @@ class User(db.Document):
 
     def clean(self):
         super(User,self).clean()
-        self.password = generate_password_hash(self.password,'sha256')
+        self.password = bcrypt.generate_password_hash(self.password)
         
 
     def check_password(self,password):
-        return check_password_hash(pwhash=str(self.password),password=password)
+        return bcrypt.check_password_hash(pw_hash=self.password,password=password)
         
 
     @staticmethod
