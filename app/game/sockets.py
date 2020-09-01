@@ -173,7 +173,6 @@ def check_answer(data):
                 get_answer(gameroom,correctAnswer)
 
 
-           
 
         json_data = gameroom.to_json()
         socketio.emit('game-info', json.loads(json_data), data['room'])
@@ -200,7 +199,10 @@ def handle_guess(data):
             finish_game(gameroom, win_user, lose_user)
         else:
             data['info'] = f"{data['username']} guessed wrong!"
+            socketio.emit('guess-info', data, data['room'])
 
-        socketio.emit('game-info', data, data['room'])
     else:
         socketio.emit('guess-info', {"info": "Game finished"}, data['room'])
+
+    json_data = gameroom.to_json()
+    socketio.emit('game-info', json.loads(json_data), data['room'])
