@@ -27,22 +27,12 @@ def handle_add(data):
     socketio.emit('game-info', data)
 
 
-
-"""
-{
- "room":"123",
- "username":"rasimatics"
-} 
-"""
-
-
 # disconnect
 @socketio.on('disconnect')
 def handle_disconnect():
     print(f"{request.sid} disconnected!")
 
 
-# start game -> game information
 # only first time when game starts
 @socketio.on('start-game')
 def handle_start(data):

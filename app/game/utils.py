@@ -2,8 +2,6 @@ import random
 from app.models import GameRoom, PlayerAnswer
 
 # get random index related to model objects
-
-
 def getRandomIndex(modelName):
     count = modelName.objects.count()
     number = random.randint(0, 1000)
