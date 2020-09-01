@@ -30,6 +30,7 @@ class Register(Resource):
 
         # save user in db
         user = User(username=data['username'],password=data['password'],email=data['email'])
+        user.set_password(data['password'])
         if 'isBot' in data:
             user.isBot = data['isBot']
         user.save()
@@ -52,7 +53,8 @@ class Login(Resource):
         password = data['password']
 
         user = get_user(username)
-
+        from app import bcrypt
+        print(bcrypt.check_password_hash(user.password,"testuser5"))
         if user and user.check_password(password):
             login_user(user)
             return make_response(jsonify({"Info": f"{user.username} signed in!"}),200)

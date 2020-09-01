@@ -11,9 +11,8 @@ import random
 @socketio.on('join-room')
 def handle_join_room(data):
     user = User.objects(username=data['username']).first()
-    user.point -= 50
-    user.save()
-    
+    point = user.point - 50
+    user.update(set__point=point)
     join_room(data['room'])
     data['info'] = 'connected'
     socketio.emit('join-room-info', data, data['room'])

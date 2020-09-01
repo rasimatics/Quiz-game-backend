@@ -15,9 +15,8 @@ class User(db.Document):
     isBot = db.BooleanField(default=False)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
-    def clean(self):
-        super(User,self).clean()
-        self.password = bcrypt.generate_password_hash(self.password)
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password)
         
 
     def check_password(self,password):
