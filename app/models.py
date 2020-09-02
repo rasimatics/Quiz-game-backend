@@ -66,7 +66,7 @@ class GameRoom(db.Document):
     waiting = db.BooleanField(default=True)
     currentQuestion = db.StringField(default="")
     gameFinished = db.BooleanField(default=False)
-    winner = db.StringField(default="")
+    winner = db.ListField(db.StringField())
     bothAnswered = db.BooleanField(default=False)
     members = db.ListField(db.EmbeddedDocumentField(Player),default=list)
     answers = db.ListField(db.EmbeddedDocumentField(PlayerAnswer))

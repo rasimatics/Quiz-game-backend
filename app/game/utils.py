@@ -10,23 +10,34 @@ def getRandomIndex(modelName):
 
 
 # game finish: modify gameroom
-def finish_game(gameroom, winner, loser):
+def finish_game(gameroom, winner, loser,draw=False):
     gameroom.gameFinished = True
-    gameroom.winner = winner.username
     gameroom.currentQuestion = ""
     gameroom.update(set__questions=[])
     gameroom.update(set__answers=[])
     gameroom.update(set__members__0__found_letters=[])
     gameroom.update(set__members__1__found_letters=[])
     gameroom.word = ""
+
+    # both users found all letters
+    if draw:
+        gameroom.winner.append(winner.username)
+        gameroom.winner.append(loser.username)
+        winner.point += 50
+        loser.point += 50
+        winner.win += 1
+        loser.win += 1
+
+    # one user found all letters
+    else:
+        gameroom.winner.append(winner.username)
+        winner.point += 100
+        winner.win += 1
+        loser.lose += 1
+
     gameroom.save()
-
-    winner.point += 100
-    winner.win += 1
-    winner.save()
-
-    loser.lose += 1
     loser.save()
+    winner.save()
 
 
 # get index of found_letter

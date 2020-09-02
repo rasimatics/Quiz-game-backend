@@ -134,8 +134,13 @@ def check_answer(data):
         firstuser = User.objects(username=member0.name).first()
         seconduser = User.objects(username=member1.name).first()
 
+        # if both user found all letters
+        if member0.found_letters[0] != "" and member1.found_letters[0] != "" :
+            finish_game(gameroom,firstuser,seconduser,True)
+            socketio.emit('answer-info', {"info": "Game finished"}, data['room'])
+
         # member0 found all letters
-        if member0.found_letters[0] != "":
+        elif member0.found_letters[0] != "":
             finish_game(gameroom,firstuser,seconduser)
             socketio.emit('answer-info', {"info": "Game finished"}, data['room'])
 
