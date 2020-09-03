@@ -1,10 +1,10 @@
 from app import socketio
-from flask_socketio import join_room, emit
 from app.models import GameRoom, Player, Question, Word, User, PlayerAnswer
+from flask_socketio import join_room, emit
 from flask import jsonify,request
-import json
 from .utils import *
 import random
+import json
 
 
 # after room created join room
@@ -47,6 +47,10 @@ def handle_disconnect():
     loser = User.objects(username=loserName).first()
     winner = User.objects(username=winnerName).first()
     finish_game(gameroom,winner,loser)
+
+    json_data = gameroom.to_json()
+    socketio.emit('game-info', json.loads(json_data), str(gameroom.id))
+
 
 # only first time when game starts
 @socketio.on('start-game')
