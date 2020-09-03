@@ -1,5 +1,6 @@
 import random
 from app.models import GameRoom, PlayerAnswer
+from mongoengine import Q
 
 # get random index related to model objects
 def getRandomIndex(modelName):
@@ -75,3 +76,19 @@ def get_answer(gameroom, correctAnswer):
     player_answer = PlayerAnswer(username=gameroom.botName, answer=str(answers[index]))
     gameroom.answers = [player_answer,]
     gameroom.save()
+
+# get gameroom with session id of socket
+def find_room_with_sid(sid):
+    gameroom = GameRoom.objects.filter(Q(members__0__sid=sid) or Q(members__1__sid=sid)).first()
+    return gameroom
+
+
+# get loser,winner from gameroom with sid of socket
+def find_member_with_sid(gameroom,sid):
+    member0 = gameroom.members[0]
+    member1 = gameroom.members[1]
+
+    if member0.sid == sid:
+        return member0.name,member1.name
+    return member1.name,member0.name
+

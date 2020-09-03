@@ -42,8 +42,11 @@ def handle_add(data):
 # disconnect
 @socketio.on('disconnect')
 def handle_disconnect():
-    print(f"{request.sid} disconnected!!!!!!!!!!")
-
+    gameroom = find_room_with_sid(request.sid)
+    loserName,winnerName = find_member_with_sid(gameroom,request.sid)
+    loser = User.objects(username=loserName).first()
+    winner = User.objects(username=winnerName).first()
+    finish_game(gameroom,winner,loser)
 
 # only first time when game starts
 @socketio.on('start-game')
