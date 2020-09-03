@@ -11,9 +11,22 @@ import random
 @socketio.on('join-room')
 def handle_join_room(data):
     user = User.objects(username=data['username']).first()
+    # update point of user
     point = user.point - 50
     user.update(set__point=point)
+
+    # save sid of player
+    gameroom = get_gameroom(data['room'])
+    member0 = gameroom.members[0]
+    member1 = gameroom.members[1]
+    if member0.name == data['username']:
+        member0.sid = request.sid
+    else:
+        member1.sid = request.sid
+    gameroom.save()
+
     join_room(data['room'])
+
     data['info'] = 'connected'
     socketio.emit('join-room-info', data, data['room'])
 
@@ -29,7 +42,7 @@ def handle_add(data):
 # disconnect
 @socketio.on('disconnect')
 def handle_disconnect():
-    print(f"{request.sid} disconnected!")
+    print(f"{request.sid} disconnected!!!!!!!!!!")
 
 
 # only first time when game starts

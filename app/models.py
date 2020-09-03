@@ -3,8 +3,6 @@ import datetime
 import random
 
 
-
-
 class User(db.Document):
     username = db.StringField()
     password = db.BinaryField()
@@ -39,6 +37,7 @@ class User(db.Document):
         return self.username
 
 class Player(db.EmbeddedDocument):
+    sid = db.StringField(default="")
     name = db.StringField()
     found_letters = db.ListField(db.StringField(),default=list)
 
