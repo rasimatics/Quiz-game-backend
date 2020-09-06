@@ -88,6 +88,7 @@ def find_member_with_sid(gameroom,sid):
     member0 = gameroom.members[0]
     member1 = gameroom.members[1]
 
+    # check session id to find which user is disconnected
     if member0.sid == sid:
         return member0.name,member1.name
     return member1.name,member0.name
