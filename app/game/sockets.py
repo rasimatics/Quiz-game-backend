@@ -197,18 +197,24 @@ def check_answer(data):
 def handle_guess(data):
     gameroom = get_gameroom(data['room'])
     if not gameroom.gameFinished:
+
+        if gameroom.members[0].name == data['username']:
+            guessed_user = gameroom.members[0]
+            other_user = gameroom.members[1]
+        else:
+            guessed_user = gameroom.members[1]
+            other_user = gameroom.members[0]
+
+        # decrease number of guesses
+        guessed_user.guess_chances-=1
+        gameroom.save()
+
         if gameroom.word.rstrip() == data['word']:
             data['info'] = f"{data['username']} found word and win the game!"
 
-            if gameroom.members[0].name == data['username']:
-                winner = gameroom.members[0].name
-                loser = gameroom.members[1].name
-            else:
-                winner = gameroom.members[1].name
-                loser = gameroom.members[0].name
 
-            win_user = User.objects(username=winner).first()
-            lose_user = User.objects(username=loser).first()
+            win_user = User.objects(username=guessed_user.name).first()
+            lose_user = User.objects(username=other_user.name).first()
 
             finish_game(gameroom, win_user, lose_user)
         else:

@@ -39,6 +39,7 @@ class User(db.Document):
 class Player(db.EmbeddedDocument):
     sid = db.StringField(default="")
     name = db.StringField()
+    guess_chances = db.IntField(default=2)
     found_letters = db.ListField(db.StringField(),default=list)
 
 
